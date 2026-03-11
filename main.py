@@ -12,5 +12,17 @@ else:
     files=os.listdir(folder_path)
 
     for file in files:
-        print(files)
+
+        full_path=os.path.join(folder_path, file)
+
+        if os.path.isfile(full_path):
+            
+            extension=file.split(".")[-1]
+        
+            print(f"Filename : {file} | Extension : {extension}")
+            
+           
+
+
+
 
