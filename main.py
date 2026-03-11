@@ -1,67 +1,45 @@
 import os
-import shutil 
-import pathlib
+import shutil
 
-FILE_CATEGORIES = {
-    "Images": ["jpg", "png", "jpeg", "gif"],
-    "Videos": ["mp4", "mkv", "avi"],
-    "Documents": ["pdf", "docx", "txt"],
-    "Archives": ["zip", "rar"]
+EXTENSION_MAP = {
+    "jpg": "Images",
+    "png": "Images",
+    "jpeg": "Images",
+    "gif": "Images",
+    "mp4": "Videos",
+    "mkv": "Videos",
+    "avi": "Videos",
+    "pdf": "Documents",
+    "docx": "Documents",
+    "txt": "Documents",
+    "zip": "Archives",
+    "rar": "Archives"
 }
 
-folder_path=input("Enter the folder path: ")
-
-    
+folder_path = input("Enter folder path: ")
 
 if not os.path.exists(folder_path):
-    print("Folder does not exist.")
+    print("Folder does not exist")
+
 else:
-    print("\nScanning folder...\n")
 
-    files=os.listdir(folder_path)
+    files = os.listdir(folder_path)
 
-    for item in files:
+    for file in files:
 
-        full_path=os.path.join(folder_path, item)
-        
-        if not os.path.exists(full_path):   
+        full_path = os.path.join(folder_path, file)
+
+        if not os.path.isfile(full_path):
             continue
 
+        extension = os.path.splitext(file)[1].lower().replace(".", "")
 
-        if os.path.isfile(full_path):
-            
-            extension=item.split(".")[-1].lower()
-            
-            catogory_found=False
+        category = EXTENSION_MAP.get(extension, "Others")
 
-            for category, extensions in FILE_CATEGORIES.items():
+        category_folder = os.path.join(folder_path, category)
 
-                if extension in extensions:
+        os.makedirs(category_folder, exist_ok=True)
 
-                    catogory_folder=os.path.join(folder_path,category)
+        shutil.move(full_path, os.path.join(category_folder, file))
 
-                    os.makedirs(catogory_folder,exist_ok=True)
-
-                    shutil.move(full_path, os.path.join(catogory_folder,item)) 
-
-                    print(f"Moved {item} -> {category}")   
-
-                    catogory_found=True    
-
-                    break   
-
-            if not catogory_found:
-
-                other_folder=os.path.join(folder_path,"Others")
-
-                os.makedirs(other_folder, exist_ok=True)
-
-                shutil.move(full_path, os.path.join(other_folder,item))
-
-                print(f"Moved {item} -> Others")
-
-
-
-
-
-
+        print(f"Moved {file} -> {category}")
