@@ -1,0 +1,1 @@
+There are no requirements for now as this programa uses the standard python modules.
